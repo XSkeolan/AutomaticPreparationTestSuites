@@ -1,3 +1,4 @@
+import builtins
 import json
 from urllib.parse import urlparse, urljoin
 
@@ -20,10 +21,8 @@ app = create_app()
 
 manager = Manager(app)
 bootstrap = Bootstrap5(app)
-
 login = LoginManager(app)
 login.login_view = 'login'
-
 
 
 @login.user_loader
@@ -120,26 +119,45 @@ def best_tests():
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
-    completed_tests_id = db.session.query(test_user.c.testid).filter(test_user.c.userid == current_user.id)
-    tests = completed_tests_id.all()
+    users = User.query.all()
+    current_user_percent_right = 0
+    top_tests = []
+    people = []
+    for user in users:
+        completed_tests_id = db.session.query(test_user.c.testid, test_user.c.score).filter(test_user.c.userid == user.id).order_by(test_user.c.score)
+        tests = completed_tests_id.all()
+        count_quests = 0
+        for i in range(len(tests)):
+            count_quests += len(Test.query.get(tests[i][0]).questions)
 
-    count_quests = 0
-    score_sum = db.session.query(func.sum(test_user.c.score).label('sum')).filter(
-        test_user.c.userid == current_user.id).group_by(test_user.c.userid).scalar()
+        score_sum = db.session.query(func.sum(test_user.c.score).label('sum')).filter(test_user.c.userid == user.id).group_by(test_user.c.userid).scalar()
+        if count_quests == 0:
+            percent_right = 0
+            score_sum = 0
+        else:
+            percent_right = score_sum * 100.0 / count_quests
+        if user.id == current_user.id:
+            current_user_percent_right = percent_right
+            top_tests_id = completed_tests_id.limit(5).all()
 
-    for i in range(len(tests)):
-        count_quests += len(Test.query.get(tests[i][0]).questions)
+            for test in top_tests_id:
+                count_quests = 0
+                current_test = Test.query.get(test[0])
+                count_quests += len(current_test.questions)
+                percent_right_test = test[1] * 100 / count_quests
 
-    percent_right = score_sum * 100.0 / count_quests
-    top_completed_tests_id = completed_tests_id.order_by(test_user.c.score).limit(5).all()  # исправить запрос
-    top_people_score = db.session.query(test_user.c.userid, func.sum(test_user.c.score).label('sum')).group_by(test_user.c.userid).limit(5).all()
+                top_tests.append((current_test.title, percent_right_test))
+
+        people.append((user.name, user.surname, percent_right, score_sum))
+
+    people = sorted(people, key=lambda tup: tup[2], reverse=True)
+    top_tests = sorted(top_tests, key=lambda tup: tup[1], reverse=True)
     created_tests = current_user.tests_created
-    print(top_completed_tests_id)
     passed_tests = current_user.tests.all()
-    print(top_people_score)
 
     return render_template('dashboard.html', username=current_user.username, created_tests=created_tests,
-                           completed_tests=passed_tests, percent=percent_right, top_test=0)
+                           completed_tests=passed_tests, percent=current_user_percent_right, top_tests=top_tests,
+                           top_people=people)
 
 
 @app.route('/editprofile', methods=['GET', 'POST'])
@@ -194,6 +212,12 @@ def create_test():
             db.session.add(test)
             db.session.commit()
     return render_template('edit_test.html', form=form, message='')
+
+
+@app.route('/tests/<testid>', methods=['GET', 'POST'])
+def get_test(testid):
+    test = Test.query.get_or_404(testid)
+    return render_template('base.html')
 
 
 @app.route('/tests/<testid>/edit', methods=['GET', 'POST'])
