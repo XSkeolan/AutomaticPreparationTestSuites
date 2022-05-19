@@ -51,7 +51,7 @@ def is_safe_url(target):
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
-
+# не работает redirect
 @app.route('/loginme', methods=['POST'])
 def login_me():
     form = LoginForm()
@@ -95,14 +95,11 @@ def register():
 
 @app.route('/', methods=['GET'])
 def index():
-    print(session)
-    print(current_user.is_authenticated)
-    print(current_user)
-    tests = Test.query.filter_by(is_common=True)
+    tests = Test.query.filter_by(is_common=True).all()
     if current_user.is_authenticated:
         tests = Test.query.all()
-        return render_template('base.html', username=current_user.username, tests=tests)
-    return render_template('base.html', tests=tests)
+        return render_template('base.html', current_user=current_user, tests=tests)
+    return render_template('index.html', tests=tests)
 
 
 @app.route('/best', methods=['GET'])
@@ -155,7 +152,7 @@ def dashboard():
     created_tests = current_user.tests_created
     passed_tests = current_user.tests.all()
 
-    return render_template('dashboard.html', username=current_user.username, created_tests=created_tests,
+    return render_template('dashboard.html', current_user=current_user, created_tests=created_tests,
                            completed_tests=passed_tests, percent=current_user_percent_right, top_tests=top_tests,
                            top_people=people)
 
@@ -179,7 +176,8 @@ def edit_profile():
             user.email = form.email.data
             user.set_password(form.password.data)
             db.session.commit()
-            return render_template('profile.html', form=form, message='Изменения успешно применены')
+            flash('Изменения успешно применены', 'success')
+            return render_template('profile.html', form=form)
         flash('Invalid username or password')
         return render_template('profile.html', form=form)
 

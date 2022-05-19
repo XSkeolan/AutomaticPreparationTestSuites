@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<h2>Привет, {{ username }}</h2>
+<h2>Привет, {{ current_user.username }}</h2>
 <p>Статистика по тестам</p>
 <div class="progress">
   <div class="progress-bar bg-success" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent }}%</div>
@@ -150,8 +150,8 @@
           label: 'My First Dataset',
           data: [{{ percent }}, {{ 100-percent }}],
           backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)'
+            '#90EE90',
+            'rgb(255, 99, 132)'
           ],
           hoverOffset: 4
         }]

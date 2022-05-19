@@ -1,22 +1,16 @@
-{% extends 'base.html' %}
-
 {% block styles %}
-{{ super() }}
+{{ bootstrap.load_css() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-{% endblock %}
-
-{% block title %}
-Вход
 {% endblock %}
 
 {% block content %}
 
-{% for category, message in  get_flashed_messages(with_categories=true) %}
-<div class="alert alert-danger" role="alert"> {{ category }} -  {{ message }} </div>
-{% endfor %}
 {% from 'bootstrap5/form.html' import render_field %}
 <form class="card card-block m-x-auto bg-faded form-signin" method="POST" action="/loginme">
 <h2 class="form-signin-heading">Вход</h2>
+    {% for category, message in  get_flashed_messages(with_categories=true) %}
+<div class="alert alert-danger" role="alert"> {{ category }} -  {{ message }} </div>
+{% endfor %}
     {{ form.csrf_token() }}
     {{ form.hidden_tag() }}
     {{ render_field(form.username) }}
