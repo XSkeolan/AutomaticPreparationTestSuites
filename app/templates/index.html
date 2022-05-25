@@ -16,7 +16,7 @@
         {% if tests[j] %}
             <div class="col-3">
                 <div class="card">
-                    <img src="..." class="card-img-top" alt="{{ tests[j].title }}">
+                    <img src="{{ url_for('static', filename='img/tests/'~tests[j].image)}}" class="card-img-top" alt="{{ tests[j].title }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ tests[j].title }}</h5>
                         <p class="card-text">{{ tests[j].description }}</p>

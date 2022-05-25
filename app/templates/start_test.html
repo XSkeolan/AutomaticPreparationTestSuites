@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mt-4">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div>
+            <h1>{{ test.title }}</h1>
+            <p>Опубликовал {{ creator.username }}</p>
+            <p class="mt-4">{{ test.description }}</p>
+        </div>
+        <div class="row">
+            <a href="/bank/createQuestion" class="btn btn-primary" role="button">Начать тест</a>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
+{% endblock %}

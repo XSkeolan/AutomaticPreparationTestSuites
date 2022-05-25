@@ -58,11 +58,11 @@ class Test(db.Model):
     title = db.Column(db.String(100), nullable=False, unique=True)
     description = db.Column(db.String(300), nullable=True)
     creator_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=True)
+    image = db.Column(db.String(200), nullable=False)
     is_common = db.Column(db.Boolean(), nullable=False, default=True)
     created_on = db.Column(db.DateTime(), default=datetime.utcnow, nullable=False)
-    questions = db.relationship('Question', secondary=test_question, backref='in_tests')
-    #questions = db.relationship('Question', secondary=test_question, backref=db.backref('tests', lazy='dynamic'),
-                                #lazy='dynamic')
+    questions = db.relationship('Question', secondary=test_question, backref=db.backref('in_tests', lazy='dynamic'),
+                                lazy='dynamic')
 
     def is_contain_question(self, question):
         return self.questions.filter(test_question.c.questionid == question.id and
@@ -91,8 +91,11 @@ class Test(db.Model):
 class Question(db.Model):
     __tablename__ = 'questions'
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
-    title = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(200), nullable=False, unique=True)
     answers = db.relationship('Answer', backref='in_question')
+
+    def __repr__(self):
+        return self.title
 
     def update(self, new_question):
         self.title = new_question

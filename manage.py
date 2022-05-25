@@ -1,8 +1,9 @@
 import builtins
 import json
+import os
 from urllib.parse import urlparse, urljoin
 
-from flask import render_template, redirect, url_for, session, flash, request, abort, Response
+from flask import render_template, redirect, url_for, session, flash, request, abort, Response, make_response
 from flask_script import Manager
 from flask_bootstrap import Bootstrap5
 from app import models
@@ -15,7 +16,9 @@ from app.models import *
 from app.database import db
 from sqlalchemy.sql.expression import select
 from sqlalchemy import func, desc, asc
-from sqlalchemy.orm import aliased
+from pathlib import Path
+from sqlalchemy.exc import IntegrityError
+import random
 
 app = create_app()
 
@@ -50,6 +53,16 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('/errors/403.html')
+
+@app.errorhandler(404)
+def forbidden(e):
+    return render_template('/errors/404.html')
+
 
 # не работает redirect
 @app.route('/loginme', methods=['POST'])
@@ -98,7 +111,7 @@ def index():
     tests = Test.query.filter_by(is_common=True).all()
     if current_user.is_authenticated:
         tests = Test.query.all()
-        return render_template('base.html', current_user=current_user, tests=tests)
+        return render_template('index.html', current_user=current_user, tests=tests)
     return render_template('index.html', tests=tests)
 
 
@@ -178,6 +191,7 @@ def edit_profile():
             db.session.commit()
             flash('Изменения успешно применены', 'success')
             return render_template('profile.html', form=form)
+        # добавить try except на уникальность по нику и почте
         flash('Invalid username or password')
         return render_template('profile.html', form=form)
 
@@ -194,7 +208,7 @@ def bank():
     for question in questions:
         response[question.title] = question.answers
     print(response)
-    return render_template('bank.html', questions=response)
+    return render_template('bank.html', questions=questions, answers=response)
 
 
 @app.route('/tests/createTest', methods=['GET', 'POST'])
@@ -203,19 +217,39 @@ def create_test():
     form = TestForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            test = Test(title=form.title.data, description=form.description.data, creator_id=current_user.id,
-                        is_common=form.is_common.data)
-            # добавить работу с вопросами, т.е добавить их в связную таблицу и работу с изображением теста
-            print(form.questions.data)
-            db.session.add(test)
-            db.session.commit()
-    return render_template('edit_test.html', form=form, message='')
+            try:
+                test = Test(title=form.title.data, description=form.description.data, creator_id=current_user.id,
+                            is_common=form.is_common.data, image=form.image.data)
+                if len(form.questions.data) < 5:
+                    raise ValueError
+                db.session.add(test)
+                db.session.commit()
+
+                for quest in form.questions.data:
+                    test.add_question(Question.query.get(form.questions.get_pk(quest)))
+
+                flash('Тест успешно создан', category='success')
+            except IntegrityError:
+                db.session.rollback()
+                flash('Тест с таким названием уже существует', category='danger')
+            except ValueError:
+                flash('Нужно выбрать хотя бы 5 вопросов для теста', category='danger')
+    base_url = url_for('static', filename='img/tests/dns.png')
+    base_url = base_url[:len(base_url) - 1 - base_url[::-1].index('/')]
+    entries = Path('./app'+base_url+'/')
+    files = []
+    for entry in entries.iterdir():
+        files.append(entry.name)
+
+    questions = Question.query.all()
+
+    return render_template('create_test.html', form=form, images=files, questions=questions)
 
 
 @app.route('/tests/<testid>', methods=['GET', 'POST'])
 def get_test(testid):
     test = Test.query.get_or_404(testid)
-    return render_template('base.html')
+    return render_template('start_test.html', test=test, creator=User.query.get(test.creator_id))
 
 
 @app.route('/tests/<testid>/edit', methods=['GET', 'POST'])
@@ -246,6 +280,28 @@ def delete_test(testid):
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
+@app.route('/tests/<testid>/checkAnswer', methods=['GET'])
+@login_required
+def check_answer(testid):
+    quest = Question.query.get(request.args.get('qid'))
+    print(quest)
+    answer = Answer.query.get(request.args.get('aid'))
+    test = Test.query.filter_by(id=testid).first()
+    test.delete()
+    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
+
+
+@app.route('/tests/getRandomQuestion', methods=['GET'])
+@login_required
+def get_random_questions():
+    questions = Question.query.all()
+    response_questions = random.sample(questions, k=10 if len(questions) > 10 else len(questions))
+    html = ''
+    for quest in response_questions:
+        html += '<input type=\"checkbox\" checked>' + quest.title + '<br>'
+    return make_response(html, 200)
+
+
 @app.route('/addQuestInTest', methods=['GET'])
 def add_quest_in_test():
     test = Test.query.filter_by(id='ffbad319-1129-4830-b754-274ca97a3b56').first()
@@ -264,14 +320,26 @@ def delete_question_from_test():
 
 @app.route('/bank/createQuestion', methods=['GET', 'POST'])
 def create_quest():
+    db.session.rollback()
     form = QuestionForm()
-    print(form.data)
     if request.method == 'POST':
         print(form.validate_on_submit())
         if form.validate_on_submit():
-            question = Question(question=form.question.data)
-            db.session.add(question)
-            db.session.commit()
+            try:
+                question = Question(title=form.question.data)
+                db.session.add(question)
+                db.session.commit()
+                answers = form.answers.data
+
+                for i in range(len(answers)):
+                    answer = Answer(answer=answers[i]['answer'],
+                                    fraction=100 if i+1 == int(form.right_number.data) else 0,
+                                    questionid=question.id)
+                    db.session.add(answer)
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                flash('Такой вопрос уже существует')
     return render_template('question.html', form=form)
 
 

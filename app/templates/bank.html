@@ -11,4 +11,35 @@
 {% endblock %}
 
 {% block content %}
+<div class="row">
+  <div class="col">
+    <h3>Банк вопросов</h3>
+  </div>
+  <div class="col">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 0">
+      <a href="/bank/createQuestion" class="btn btn-primary" role="button">Добавить вопрос</a>
+    </div>
+  </div>
+</div>
+<div class="accordion accordion-flush">
+{% for quest in questions %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-{{loop.index}}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-{{loop.index}}" aria-expanded="false" aria-controls="flush-collapse-{{loop.index}}">
+                {{ quest.title }}
+            </button>
+        </h2>
+        <div id="flush-collapse-{{loop.index}}" class="accordion-collapse collapse" aria-labelledby="flush-{{loop.index}}">
+            <div class="accordion-body">
+                {% for answer in answers[quest.title] %}
+                    <div class="row">
+                        <div class="col-auto">{{ answer.answer }}</div>
+                        <div class="col-auto">{% if answer.fraction == 100 %} ✔ {% else %} ❌ {% endif %}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
 {% endblock %}

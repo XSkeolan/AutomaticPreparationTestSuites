@@ -12,12 +12,17 @@
 
 {% block content %}
 
-{% for category, message in  get_flashed_messages(with_categories=true) %}
-<div class="alert alert-danger" role="alert"> {{ category }} -  {{ message }} </div>
-{% endfor %}
+
 
 <form class="card card-block m-x-auto bg-faded form-signin" method="POST" action="/bank/createQuestion">
 <h2 class="form-signin-heading">Создание вопроса</h2>
+    {% for category, message in  get_flashed_messages(with_categories=true) %}
+        {% if category == 'success' %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% else %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
     {{ form.csrf_token() }}
     {{ render_field(form.question) }}
     {% for answer in form.answers %}
