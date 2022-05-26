@@ -2,7 +2,9 @@
 {{ bootstrap.load_css() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 {% endblock %}
-
+{% block title %}
+Вход
+{% endblock %}
 {% block content %}
 
 {% from 'bootstrap5/form.html' import render_field %}

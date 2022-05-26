@@ -1,17 +1,63 @@
 {% extends 'base.html' %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block title %} Онлайн тесты {% endblock %}
+
 {% block content %}
 <div class="row mt-4">
-    <div class="col-3"></div>
+    <div class="col"></div>
     <div class="col-6">
-        <div>
+        <div class="row">
             <h1>{{ test.title }}</h1>
             <p>Опубликовал {{ creator.username }}</p>
             <p class="mt-4">{{ test.description }}</p>
         </div>
-        <div class="row">
-            <a href="/bank/createQuestion" class="btn btn-primary" role="button">Начать тест</a>
+        <div class="row mt-4 mb-4">
+            <button id="begin" type="button" class="btn btn-primary" onclick="openTest()">Начать тест</button>
+        </div>
+        <div id="mainTest" class="row" style="display: none">
+            {% for quest in test.questions.all() %}
+            {% set outer_loop = loop.index %}
+            <div class="row">
+                <div class="col">
+                    <h2>Вопрос {{ loop.index }}</h2>
+                    <h4>{{ quest.title }}</h4>
+                    <div class="list-group mt-3">
+                        {% for answer in quest.answers %}
+                            <input id="q-{{ outer_loop }}-answer-{{ loop.index }}" type="radio" name="RadioInputName{{ outer_loop }}" value="{{ answer.id }}">
+                            <label for="q-{{ outer_loop }}-answer-{{ loop.index }}" class="list-group-item">{{ answer.answer }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-3">
+            {% endfor %}
+            <div class="row">
+                <button type="button" class="btn btn-success mt-4" onclick="sendAnswers()">Проверить</button>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card" style="display:none">
+                        <h5 class="card-header">Поздравляем с прохождением теста!</h5>
+                        <div class="card-body">
+                            <h5 class="card-title">Ваши результаты</h5>
+                            <p class="card-text"></p>
+                            <p class="card-text"></p>
+                            <a href="#" class="btn btn-primary">Вернуться в личный кабинет</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-3"></div>
+    <div class="col"></div>
 </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/sendAnswers.js')}}"></script>
 {% endblock %}

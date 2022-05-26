@@ -11,10 +11,10 @@
             {{ bootstrap.load_css() }}
         {% endblock %}
 
-        <title>Онлайн тесты</title>
+        <title>{% block title %} Онлайн тесты {% endblock %}</title>
         {% endblock %}
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <div class="container">
             <nav class="navbar navbar-light bg-light navbar-fixed-top">
                 <div class="container-fluid">
@@ -22,18 +22,14 @@
                         <img src="{{ url_for('static', filename='img/favicon.png') }}" class="d-inline-block align-text-top">
                         Генератор тестов
                     </a>
-                    <a class="btn nav-item" href="/best" style="padding: 0; margin: 0px 10px -20px 10px">
-                        <img src="{{ url_for('static', filename='img/best.png') }}" alt="Лучшие">
-                        <p>Лучшие</p>
-                    </a>
-                    <a class="btn nav-item" href="#" style="padding: 0; margin: 0px 10px -20px 10px">
-                        <img src="{{ url_for('static', filename='img/recent.png') }}" alt="Недавние">
-                        <p>Недавние</p>
-                    </a>
-                    <form class="nav-item d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+<!--                    <a class="btn nav-item" href="/best" style="padding: 0; margin: 0px 10px -20px 10px">-->
+<!--                        <img src="{{ url_for('static', filename='img/best.png') }}" alt="Лучшие">-->
+<!--                        <p>Лучшие</p>-->
+<!--                    </a>-->
+<!--                    <a class="btn nav-item" href="#" style="padding: 0; margin: 0px 10px -20px 10px">-->
+<!--                        <img src="{{ url_for('static', filename='img/recent.png') }}" alt="Недавние">-->
+<!--                        <p>Недавние</p>-->
+<!--                    </a>-->
                     <span class="navbar-text ms-auto">
                         {{ current_user.username }}
                     </span>
@@ -59,12 +55,11 @@
             </nav>
             {% block content %} {% endblock %}
         </div>
-        <footer class="blog-footer">
-            <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            <p>
-                <a href="#">Back to top</a>
-            </p>
-        </footer>
+        <footer class="mt-auto">
+                <div class="container">
+                    <span>Yesty</span>
+                </div>
+            </footer>
         {% block scripts %}
             <!-- Optional JavaScript -->
             {{ bootstrap.load_js() }}

@@ -5,6 +5,10 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 {% endblock %}
 
+{% block title %}
+Регистрация
+{% endblock %}
+
 {% block content %}
 
 {% for category, message in  get_flashed_messages(with_categories=true) %}

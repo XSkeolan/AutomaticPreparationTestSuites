@@ -15,8 +15,8 @@ class LoginForm(FlaskForm):
 
 
 class ProfileForm(FlaskForm):
-    name = StringField("Имя", validators=[InputRequired(), Length(min=5, max=40)])
-    surname = StringField("Фамилия", validators=[InputRequired(), Length(min=5, max=40)])
+    name = StringField("Имя", validators=[InputRequired(), Length(max=40)])
+    surname = StringField("Фамилия", validators=[InputRequired(), Length(max=40)])
     username = StringField("Имя пользователя", validators=[InputRequired(), Length(min=5)])
     email = StringField('Email', validators=[InputRequired(), Email(message='Неверный email'), Length(max=50)])
     password = PasswordField("Пароль", validators=[InputRequired(message='Неверный пароль'), Length(min=8, max=32)])

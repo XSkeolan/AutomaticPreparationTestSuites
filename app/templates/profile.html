@@ -21,7 +21,6 @@
         <p class="text-center">{{ current_user.surname }} {{ current_user.name }}</p>
     </div>
     <div class="col">
-<!--        {{ render_form(form) }}-->
         <form class="form" method="POST" action="/editprofile">
             <h2 class="form-signin-heading">Изменить текущие данные</h2>
             {% for category, message in  get_flashed_messages(with_categories=true) %}

@@ -14,8 +14,12 @@
 <h2>Привет, {{ current_user.username }}</h2>
 <p>Статистика по тестам</p>
 <div class="progress">
-  <div class="progress-bar bg-success" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent }}%</div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - percent }}%" aria-valuenow="{{ 100 - percent }}" aria-valuemin="0" aria-valuemax="100">Неправильные {{ 100 - percent }}%</div>
+  {% if percent == 0 %}
+    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent }}%</div>
+  {% else %}
+    <div class="progress-bar bg-success" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent }}%</div>
+    <div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - percent }}%" aria-valuenow="{{ 100 - percent }}" aria-valuemin="0" aria-valuemax="100">Неправильные {{ 100 - percent }}%</div>
+  {% endif %}
 </div>
 <div class="row mt-3">
   <div class="col">
@@ -34,7 +38,9 @@
     </div>
   </div>
   <div class="col">
-    <canvas id="myChart" width="300" height="300"></canvas>
+    {% if percent > 0 %}
+      <canvas id="myChart" width="300" height="300"></canvas>
+    {% endif %}
   </div>
   <div class="col">
     <h4 class="text-center">Топ пользователей по проценту правильных ответов</h4>
@@ -80,7 +86,7 @@
             <div class="card-body d-block w-100">
               <h5 class="card-title">{{ created_tests[j].title }}</h5>
               <p class="card-text">{{ created_tests[j].description }}</p>
-              <a href="http://localhost:5000/tests/{{created_tests[j].id}}" class="btn btn-primary">Посмотреть</a>
+              <a href="http://127.0.0.1:5000/tests/{{created_tests[j].id}}" class="btn btn-primary">Посмотреть</a>
             </div>
           </div>
         </div>
@@ -114,7 +120,7 @@
             <div class="card-body d-block w-100">
               <h5 class="card-title">{{ completed_tests[j].title }}</h5>
               <p class="card-text">{{ completed_tests[j].description }}</p>
-              <a href="http://localhost:5000/tests/{{created_tests[j].id}}" class="btn btn-primary">Посмотреть</a>
+              <a href="http://127.0.0.1:5000/tests/{{created_tests[j].id}}" class="btn btn-primary">Посмотреть</a>
             </div>
           </div>
         </div>

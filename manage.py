@@ -15,10 +15,11 @@ from app.forms import *
 from app.models import *
 from app.database import db
 from sqlalchemy.sql.expression import select
-from sqlalchemy import func, desc, asc
+from sqlalchemy import func, desc, asc, text
 from pathlib import Path
 from sqlalchemy.exc import IntegrityError
-import random
+from flask_restful import reqparse
+import uuid
 
 app = create_app()
 
@@ -102,7 +103,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return '<h1>Регистрация завершена</h1>'
+        return redirect('login')
     return render_template('register.html', form=form)
 
 
@@ -138,7 +139,7 @@ def dashboard():
         tests = completed_tests_id.all()
         count_quests = 0
         for i in range(len(tests)):
-            count_quests += len(Test.query.get(tests[i][0]).questions)
+            count_quests += len(Test.query.get(tests[i][0]).questions.all())
 
         score_sum = db.session.query(func.sum(test_user.c.score).label('sum')).filter(test_user.c.userid == user.id).group_by(test_user.c.userid).scalar()
         if count_quests == 0:
@@ -153,7 +154,7 @@ def dashboard():
             for test in top_tests_id:
                 count_quests = 0
                 current_test = Test.query.get(test[0])
-                count_quests += len(current_test.questions)
+                count_quests += len(current_test.questions.all())
                 percent_right_test = test[1] * 100 / count_quests
 
                 top_tests.append((current_test.title, percent_right_test))
@@ -280,26 +281,35 @@ def delete_test(testid):
     return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
 
 
-@app.route('/tests/<testid>/checkAnswer', methods=['GET'])
-@login_required
+@app.route('/tests/<testid>/getResult', methods=['POST'])
 def check_answer(testid):
-    quest = Question.query.get(request.args.get('qid'))
-    print(quest)
-    answer = Answer.query.get(request.args.get('aid'))
-    test = Test.query.filter_by(id=testid).first()
-    test.delete()
-    return json.dumps({'success': True}), 200, {'ContentType': 'application/json'}
-
-
-@app.route('/tests/getRandomQuestion', methods=['GET'])
-@login_required
-def get_random_questions():
-    questions = Question.query.all()
-    response_questions = random.sample(questions, k=10 if len(questions) > 10 else len(questions))
-    html = ''
-    for quest in response_questions:
-        html += '<input type=\"checkbox\" checked>' + quest.title + '<br>'
-    return make_response(html, 200)
+    print(testid)
+    print(request.get_json())
+    parser = reqparse.RequestParser()
+    parser.add_argument('answers', type=builtins.list, action='append')
+    args = parser.parse_args()
+    print(args)
+    test = Test.query.get(testid)
+    if len(test.questions.all()) > len(args['answers']):
+        return make_response('<div class="alert alert-danger" role="alert">Не на все вопросы были выбраны ответы</div>', 400)
+    answers = []
+    for i in range(len(args['answers'])):
+        answers.append(''.join(args['answers'][i]))
+    response = dict()
+    score = 0
+    for answer in answers:
+        a = Answer.query.get(answer)
+        if a.fraction == 100:
+            score += 1
+        quest = Question.query.get(a.questionid)
+        print(quest.answers)
+        for answer2 in quest.answers:
+            if answer2.fraction == 100:
+                response[answer] = str(answer2.id)
+    sql = text("INSERT INTO testuser(id, testid, userid, score) VALUES('" + str(uuid.uuid4()) + "', '" + testid + "', '" + str(current_user.id) + "', " + str(score) + ")")
+    db.engine.execute(sql)
+    print(response)
+    return json.dumps({'success': True, 'answers': response}), 200, {'ContentType': 'application/json'}
 
 
 @app.route('/addQuestInTest', methods=['GET'])
@@ -310,17 +320,8 @@ def add_quest_in_test():
     return 'Quest added in tests'
 
 
-@app.route('/deleteQuestFromTest', methods=['GET'])
-def delete_question_from_test():
-    test = Test.query.filter_by(title='new tests for lab').first()
-    question = Question.query.filter_by(question='why').first()
-    test.remove_question(question)
-    return "Quest deleted from tests"
-
-
 @app.route('/bank/createQuestion', methods=['GET', 'POST'])
 def create_quest():
-    db.session.rollback()
     form = QuestionForm()
     if request.method == 'POST':
         print(form.validate_on_submit())
@@ -378,7 +379,6 @@ def delete_question():
     db.session.commit()
 
 
-
 @app.route('/mytests/question/addAnswer', methods=['POST'])
 @login_required
 def add_answer():
@@ -414,6 +414,14 @@ def delete_profile():
     db.session.delete(user)
     db.session.commit()
 # endregion
+
+
+@app.route('/unblockBank', methods=['GET'])
+def unblock_bank():
+    user = User.query.get(current_user.id)
+    user.role_id = '93a8c502-a9a9-4bbb-989b-c123ac16379c'
+    db.session.commit()
+    return make_response('200', 200)
 
 
 if __name__ == '__main__':
