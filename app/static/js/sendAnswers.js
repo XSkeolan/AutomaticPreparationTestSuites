@@ -19,7 +19,6 @@ function sendAnswers()
 
     xhr.onreadystatechange = function () {
         if(xhr.readyState == 4) {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             if(xhr.status == 400)
             {
                 console.log('400')
@@ -43,7 +42,7 @@ function sendAnswers()
                 var msg = document.getElementById('info')
                 if(msg != null)
                 {
-                    document.getElementById(info).remove()
+                    document.getElementById('info').remove()
                 }
                 var rightAnswers = 0;
                 var result = JSON.parse(xhr.responseText)

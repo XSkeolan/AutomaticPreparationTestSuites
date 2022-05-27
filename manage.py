@@ -283,6 +283,8 @@ def check_answer(testid):
     args = parser.parse_args()
     print(args)
     test = Test.query.get(testid)
+    if args['answers'] is None:
+        return make_response('<div class="alert alert-danger" role="alert">Не на все вопросы были выбраны ответы</div>', 400)
     if len(test.questions.all()) > len(args['answers']):
         return make_response('<div class="alert alert-danger" role="alert">Не на все вопросы были выбраны ответы</div>', 400)
     answers = []
