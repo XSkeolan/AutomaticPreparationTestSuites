@@ -42,7 +42,7 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <li><a class="dropdown-item" href="/editprofile">Профиль</a></li>
                                 <li><a class="dropdown-item" href="/dashboard">Статистика</a></li>
-                                <li><a class="dropdown-item" href="#">Подать заявку на эксперта</a></li>
+                                <li><a class="dropdown-item" href="/unblockBank">Подать заявку на эксперта</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/logout">Выйти</a></li>
                             </ul>
@@ -54,12 +54,20 @@
                 </div>
             </nav>
             {% block content %} {% endblock %}
+            <footer class="text-center text-lg-start bg-light text-muted mt-auto">
+        <!-- Section: Social media -->
+        <!-- Section: Social media -->
+
+        <!-- Section: Links  -->
+        <!-- Section: Links  -->
+
+        <!-- Copyright -->
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        © Скачков Даниил 2022:
         </div>
-        <footer class="mt-auto">
-                <div class="container">
-                    <span>Yesty</span>
-                </div>
-            </footer>
+        <!-- Copyright -->
+        </footer>
+        </div>
         {% block scripts %}
             <!-- Optional JavaScript -->
             {{ bootstrap.load_js() }}

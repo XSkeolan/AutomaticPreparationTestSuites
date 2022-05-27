@@ -61,7 +61,7 @@ def forbidden(e):
     return render_template('/errors/403.html')
 
 @app.errorhandler(404)
-def forbidden(e):
+def not_found(e):
     return render_template('/errors/404.html')
 
 
@@ -100,10 +100,13 @@ def register():
                         email=form.email.data, role_id=Role.query.filter_by(name='user').first().id)
         new_user.set_password(form.password.data)
 
-        db.session.add(new_user)
-        db.session.commit()
-
-        return redirect('login')
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect('login')
+        except IntegrityError:
+            db.session.rollback()
+            flash('Пользователь с таким email или username уже существует ')
     return render_template('register.html', form=form)
 
 
@@ -114,17 +117,6 @@ def index():
         tests = Test.query.all()
         return render_template('index.html', current_user=current_user, tests=tests)
     return render_template('index.html', tests=tests)
-
-
-@app.route('/best', methods=['GET'])
-def best_tests():
-    best_tests_id = db.session.query(test_user.c.testid, func.count('testid').label('cnt')).group_by('testid').order_by(
-        'cnt').limit(5).all()
-    tests = []
-    print(best_tests_id)
-    for i in range(len(best_tests_id)):
-        tests.append(Test.query.get(best_tests_id[i][0]))
-    return render_template('base.html', tests=tests)
 
 
 @app.route('/dashboard', methods=['GET'])
@@ -183,17 +175,18 @@ def edit_profile():
         return render_template('profile.html', form=form)
     elif request.method == 'POST':
         if form.validate_on_submit():
-            user = User.query.get(current_user.id)
-            user.name = form.name.data
-            user.surname = form.surname.data
-            user.username = form.username.data
-            user.email = form.email.data
-            user.set_password(form.password.data)
-            db.session.commit()
-            flash('Изменения успешно применены', 'success')
-            return render_template('profile.html', form=form)
-        # добавить try except на уникальность по нику и почте
-        flash('Invalid username or password')
+            try:
+                user = User.query.get(current_user.id)
+                user.name = form.name.data
+                user.surname = form.surname.data
+                user.username = form.username.data
+                user.email = form.email.data
+                user.set_password(form.password.data)
+                db.session.commit()
+                flash('Изменения успешно применены', 'success')
+            except IntegrityError:
+                db.session.rollback()
+                flash('Пользователь с вашим новым именем или email уже существует')
         return render_template('profile.html', form=form)
 
 
@@ -306,8 +299,9 @@ def check_answer(testid):
         for answer2 in quest.answers:
             if answer2.fraction == 100:
                 response[answer] = str(answer2.id)
-    sql = text("INSERT INTO testuser(id, testid, userid, score) VALUES('" + str(uuid.uuid4()) + "', '" + testid + "', '" + str(current_user.id) + "', " + str(score) + ")")
-    db.engine.execute(sql)
+    if current_user.is_authenticated:
+        sql = text("INSERT INTO testuser(id, testid, userid, score) VALUES('" + str(uuid.uuid4()) + "', '" + testid + "', '" + str(current_user.id) + "', " + str(score) + ")")
+        db.engine.execute(sql)
     print(response)
     return json.dumps({'success': True, 'answers': response}), 200, {'ContentType': 'application/json'}
 
@@ -338,6 +332,7 @@ def create_quest():
                                     questionid=question.id)
                     db.session.add(answer)
                 db.session.commit()
+                flash('Вопрос создан', 'success')
             except IntegrityError:
                 db.session.rollback()
                 flash('Такой вопрос уже существует')
@@ -421,7 +416,7 @@ def unblock_bank():
     user = User.query.get(current_user.id)
     user.role_id = '93a8c502-a9a9-4bbb-989b-c123ac16379c'
     db.session.commit()
-    return make_response('200', 200)
+    return redirect('/bank')
 
 
 if __name__ == '__main__':

@@ -105,7 +105,7 @@
   </button>
 </div>
 <h3>Пройденные тесты({{ completed_tests|length }})</h3>
-<div id="completedTestsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
+<div id="completedTestsCarousel" class="carousel slide mb-3" data-bs-ride="carousel" data-bs-touch="false" data-bs-interval="false">
   <div class="carousel-inner" style="padding: 0px 30px 0px 30px">
     {% for i in range((completed_tests|length/3)|round(0,'ceil')|int) %}
       {% if loop.first %}

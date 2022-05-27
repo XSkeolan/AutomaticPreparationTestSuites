@@ -20,19 +20,22 @@ window.addEventListener('DOMContentLoaded', (event) => {
     $div.classList.add('row');
     $div.classList.add('mb-2');
     const $labelDiv = document.createElement('div');
-    $labelDiv.classList.add('col-7');
+    $labelDiv.classList.add('col-6');
+    $labelDiv.classList.add('col-sm');
     const $butDiv = document.createElement('div');
     $butDiv.classList.add('col-3');
-    $butDiv.classList.add('d-grid');
-    $butDiv.classList.add('gap-2');
-    $butDiv.classList.add('d-md-flex');
-    $butDiv.classList.add('justify-content-md-end');
+    $butDiv.classList.add('col-sm');
+//    $butDiv.classList.add('d-grid');
+//    $butDiv.classList.add('gap-2');
+//    $butDiv.classList.add('d-md-flex');
+//    $butDiv.classList.add('justify-content-md-end');
     const $butDiv2 = document.createElement('div');
-    $butDiv2.classList.add('col');
-    $butDiv2.classList.add('d-grid');
-    $butDiv2.classList.add('gap-2');
-    $butDiv2.classList.add('d-md-flex');
-    $butDiv2.classList.add('justify-content-md-end');
+    $butDiv2.classList.add('col-3');
+    $butDiv2.classList.add('col-sm');
+//    $butDiv2.classList.add('d-grid');
+//    $butDiv2.classList.add('gap-2');
+//    $butDiv2.classList.add('d-md-flex');
+//    $butDiv2.classList.add('justify-content-md-end');
 
     divUl.prepend($div);
     $div.appendChild($labelDiv);
@@ -47,6 +50,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     $but.textContent = 'Сгенерировать набор';
     $but.classList.add('btn');
     $but.classList.add('btn-primary');
+    $but.classList.add('btn-sm');
     $but.onclick = () => {
         while (ul.firstChild) {
             ul.removeChild(ul.lastChild);
@@ -84,6 +88,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     $addbut.textContent = 'Добавить вопрос';
     $addbut.classList.add('btn');
     $addbut.classList.add('btn-primary');
+    $addbut.classList.add('btn-sm');
     $addbut.setAttribute('data-bs-toggle','modal');
     $addbut.setAttribute('data-bs-target','#selectQuestion');
 

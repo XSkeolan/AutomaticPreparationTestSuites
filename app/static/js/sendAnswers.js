@@ -82,7 +82,7 @@ function sendAnswers()
                 var card = document.querySelector('.card')
                 var cardTexts = document.querySelectorAll('.card-text')
                 cardTexts[0].textContent = 'Правильные ответы: ' + rightAnswers;
-                cardTexts[0].textContent = 'Всего вопросов: ' + selectionAnswers.length;
+                cardTexts[1].textContent = 'Всего вопросов: ' + selectionAnswers.length;
                 card.setAttribute('style', '')
             }
         };
