@@ -35,7 +35,7 @@
                     </span>
                     <div class="nav-item">
                         {% if current_user.is_authenticated %}
-                        <div class="dropdown">
+                        <div class="dropdown" style="margin-right: 30px">
                             <a class="btn btn-light dropdown-toggle shadow-none" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="{{ url_for('static', filename='img/profile.png') }}">
                             </a>
@@ -43,6 +43,7 @@
                                 <li><a class="dropdown-item" href="/editprofile">Профиль</a></li>
                                 <li><a class="dropdown-item" href="/dashboard">Статистика</a></li>
                                 <li><a class="dropdown-item" href="/unblockBank">Подать заявку на эксперта</a></li>
+                                <li><a class="dropdown-item" href="/bank">Банк заданий</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/logout">Выйти</a></li>
                             </ul>
@@ -59,7 +60,7 @@
         <footer class="text-center text-lg-start  text-muted mt-auto">
             <div class="container bg-light">
                 <div class="text-center p-4">
-        © Скачков Даниил 2022:
+        © Скачков Даниил 2022
         </div>
             </div>
         <!-- Section: Social media -->

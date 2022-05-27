@@ -50,7 +50,7 @@ function sendAnswers()
                     var lables = document.querySelectorAll('.list-group > label')
                     var allAnswer = document.querySelectorAll('.list-group > input')
                     allAnswer.forEach(function(answer, i, arr){
-                        if(answer.value==value)
+                        if(answer.value==value && answer.checked)
                         {
                             lables.forEach(function(label, j, arr2){
                                 if(label.getAttribute('for') == answer.id)

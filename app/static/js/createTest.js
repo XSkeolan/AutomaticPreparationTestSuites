@@ -94,10 +94,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     $butDiv2.appendChild($addbut)
 });
-
-var myModalEl = document.getElementById('selectQuestion')
-myModalEl.addEventListener('hidden.bs.modal', function (event) {
-    var listItems = document.querySelectorAll('.list-group-item > input');
+function saveQuets()
+{
+var listItems = document.querySelectorAll('.list-group-item > input');
     var selectedQuestion = document.querySelectorAll('#questions > li > input');
     listItems.forEach(function(item, i, arr1) {
         selectedQuestion.forEach(function(quest, j, arr2) {
@@ -107,7 +106,21 @@ myModalEl.addEventListener('hidden.bs.modal', function (event) {
             }
         });
     });
-})
+}
+
+var myModalEl = document.getElementById('selectQuestion')
+//myModalEl.addEventListener('hidden.bs.modal', function (event) {
+//    var listItems = document.querySelectorAll('.list-group-item > input');
+//    var selectedQuestion = document.querySelectorAll('#questions > li > input');
+//    listItems.forEach(function(item, i, arr1) {
+//        selectedQuestion.forEach(function(quest, j, arr2) {
+//            if(item.getAttribute('value') == quest.getAttribute('value'))
+//            {
+//                quest.checked=item.checked;
+//            }
+//        });
+//    });
+//})
 myModalEl.addEventListener('show.bs.modal', function (event) {
     var selectedQuestion = document.querySelectorAll('#questions > li > input');
     var listItems = document.querySelectorAll('.list-group-item > input');
