@@ -11,7 +11,7 @@ body * {
 
 body {
   font: normal 100%/1.15 "Merriweather", serif;
-  background: #fff url("https://uc94a1825188560a1f671165a5cc.previews.dropboxusercontent.com/p/thumb/ABjlrRn2z3Y-y0qYgXnsPEqBpumPRxbupk2df58v8KP8p7OTa-WYee9PBVhVRVZO8J9K8j6wM39jxzIxq0hAkY_KlaPW6dUvn86uV-qckqn3-gh3ThyuQF6VRStJ5sgouvxWgNxv2MiRCXIYjO10cjAWqailg2OO9hTgglWc90nIAuPOoufB4CxLiKTW8hiObbxhzTTS2AM2c0Z9eakf6JKklutYo0mvylyYNtHdsWiui-E7O6GJNcxAXMQSd4kx-6AgWF4nwEaoF6E4DVFRipJ7894VRTq0CAVYEYX282Kmw60E7G3qLxPfP7X3LXSMUhbepHiAyAu9w4psdlAap7ehWLzmcrl6Fwp-EKxK1Oab-KeaoNBXzj3y3SXnlVucw7JCiWVbqzhhiGK7M7aXqgpc/p.jpeg") repeat 0 0;
+  background: #f1f1f1 repeat 0 0;
   color: #fff;
 }
 
@@ -21,7 +21,6 @@ body {
   max-width: 1298px;
   height: auto;
   margin: 2em auto 0 auto;
-  background: transparent url("https://uc3cc4ba7ffd40ae108043eadbbf.dl.dropboxusercontent.com/cd/0/inline/Blypk7ecdw3fPPV5bWLfQW5pVu8nraUR5Rk7uUNp0PTv31D-0uA1NKu7qcRVJGd9aRftMXgwAOVDCtlFljf-doZly7QljVzYaSFQXcPx5i9N22uEXyF08plmPXNcnDAgNvApED8aWMydRfvXJxuJFqcvHsUUoZf__6jgRQ9UUx0a-g/file#") no-repeat center top 24em;
 }
 
 /* https://www.vecteezy.com/vector-art/237238-dog-family-colored-doodle-drawing */
@@ -31,7 +30,7 @@ body {
   margin: 0 auto;
   padding: 1em 1em;
   text-align: center;
-  background: url("https://uc727e11a3dfa0854aaf9dbede4e.previews.dropboxusercontent.com/p/thumb/ABhOouccAlIf6ZUmh0TMmzinC6qD890J2a0iGnGpFVS9jNEDksDI4cXsoQ8f5oJqbYXgEjw-W9qlSHhA07VuKKkpIdeYPBVDGKQIvAqVniFT7VQyFCXJ45z70NZYzn56oSNfuMoOug5Xjodc308Nee6RS2dcdDJuCox89hsVvMBEDR6vk8XFUPUCQ7zVabj89mnKUC4GgIZXHwM7A0i3SOXUimyW1WZN12tIpSyje7YvCbAh0FT9Uk9Bf6rZXUUUyWgPhgJpmMxrx-dZwnD_iob4jJkE6zxjV9KIbvhdsUxLlyzmmz8eHl9-gxcN39z-yhucANdrlSVC5NmnYNseC8zQlmcnC0K2v0pFHwRMQWO6Cs0TW4-Z6VkK2sPqTXJq0xeuUHRzYhmlZIPn9iPG-mYMjDB30wM5qWf2ifdsiGBOpg/p.jpeg") no-repeat top 10em center;
+  background: url("https://static.vecteezy.com/system/resources/previews/000/237/238/non_2x/dog-family-colored-doodle-drawing-vector.jpg") no-repeat top 10em center;
 }
 
 h1 {

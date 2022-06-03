@@ -19,26 +19,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const $div = document.createElement('div')
     $div.classList.add('row');
     $div.classList.add('mb-2');
+    $div.classList.add('justify-content-between');
     const $labelDiv = document.createElement('div');
-    $labelDiv.classList.add('col-6');
-    $labelDiv.classList.add('col-sm');
+    $labelDiv.classList.add('col-auto');
+    $labelDiv.classList.add('col-sm-6');
     const $butDiv = document.createElement('div');
-    $butDiv.classList.add('col-3');
+    $butDiv.classList.add('col-auto');
     $butDiv.classList.add('col-sm');
-//    $butDiv.classList.add('d-grid');
-//    $butDiv.classList.add('gap-2');
-//    $butDiv.classList.add('d-md-flex');
-//    $butDiv.classList.add('justify-content-md-end');
+    $butDiv.classList.add('mt-2');
     const $butDiv2 = document.createElement('div');
-    $butDiv2.classList.add('col-3');
+    $butDiv2.classList.add('col-auto');
     $butDiv2.classList.add('col-sm');
-//    $butDiv2.classList.add('d-grid');
-//    $butDiv2.classList.add('gap-2');
-//    $butDiv2.classList.add('d-md-flex');
-//    $butDiv2.classList.add('justify-content-md-end');
+    $butDiv2.classList.add('mt-2');
+    $w = document.createElement('div');
+    $w.classList.add('w-100');
+    $w.classList.add('d-block');
+    $w.classList.add('d-sm-none');
 
     divUl.prepend($div);
     $div.appendChild($labelDiv);
+    $div.appendChild($w);
     $div.appendChild($butDiv);
     $div.appendChild($butDiv2);
     $labelDiv.appendChild(label)

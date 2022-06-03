@@ -18,16 +18,15 @@ class ProfileForm(FlaskForm):
     name = StringField("Имя", validators=[InputRequired(), Length(max=40)])
     surname = StringField("Фамилия", validators=[InputRequired(), Length(max=40)])
     username = StringField("Имя пользователя", validators=[InputRequired(), Length(min=5)])
-    email = StringField('Email', validators=[InputRequired(), Email(message='Неверный email'), Length(max=50)])
+    email = EmailField('Email', validators=[InputRequired(), Email(message='Неверный email'), Length(max=50)])
     password = PasswordField("Пароль", validators=[InputRequired(message='Неверный пароль'), Length(min=8, max=32)])
     submit = SubmitField('Сохранить')
 
 
 class RegisterForm(ProfileForm):
-    confirm_password = PasswordField("Подтвердите пароль", validators=[InputRequired(),
-                                                                       EqualTo('password',
-                                                                               message='Пароли не одинаковые'),
-                                                                       Length(min=8, max=32)])
+    confirm_password = PasswordField("Подтвердите пароль",
+                                     validators=[InputRequired(), EqualTo('password', message='Пароли не одинаковые'),
+                                                 Length(min=8, max=32)])
     submit = SubmitField("Зарегистрироваться")
 
 
@@ -46,7 +45,10 @@ class TestForm(FlaskForm):
     title = StringField('Название', validators=[InputRequired()])
     description = TextAreaField('Описание')
     image = StringField('', render_kw={'style': 'display:none'}, default='dns.png')
-    questions = QuerySelectMultipleField('Вопросы', query_factory=lambda: random.sample(Question.query.all(), 10 if len(Question.query.all())>10 else len(Question.query.all())),
+    questions = QuerySelectMultipleField('Вопросы',
+                                         query_factory=lambda: random.sample(Question.query.all(),
+                                                                             10 if len(Question.query.all()) > 10 else
+                                                                             len(Question.query.all())),
                                          widget=widgets.ListWidget(prefix_label=False),
                                          option_widget=widgets.CheckboxInput(),
                                          render_kw={'style': 'list-style-type: none;'})

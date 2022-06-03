@@ -14,13 +14,17 @@
 
 
 <div class="row mt-3">
-    <div class="col-2">
-        <div class="d-md-flex justify-content-md-center mb-2">
-            <img src="{{ url_for('static', filename='img/profile_128x128.png') }}" alt="">
-        </div>
-        <p class="text-center">{{ current_user.surname }} {{ current_user.name }}</p>
-    </div>
     <div class="col">
+        <div class="text-center">
+            <img class="img-thumbnail" src="{{ url_for('static', filename='img/profile_128x128.png') }}" alt="">
+            <p>{{ current_user.surname }} {{ current_user.name }}</p>
+        </div>
+    </div>
+    <div class="w-100 d-block d-md-none"></div>
+    <div class="row">
+
+    </div>
+    <div class="col col-md-9">
         <form class="form" method="POST" action="/editprofile">
             <h2 class="form-signin-heading">Изменить текущие данные</h2>
             {% for category, message in  get_flashed_messages(with_categories=true) %}
@@ -37,20 +41,15 @@
             {{ render_field(form.username) }}
             {{ render_field(form.email) }}
             {{ render_field(form.password) }}
-            <div class="row">
-                <div class="col">
+            <div class="row justify-content-between">
+                <div class="col-auto mr-auto">
                     {{ render_field(form.submit) }}
                 </div>
-                <div class="col">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 0">
-                        <a href="/dashboard" class="btn btn-primary btn" role="button">Вернуться</a>
-                    </div>
+                <div class="col-auto">
+                    <a href="/dashboard" class="btn btn-primary btn" role="button">Вернуться</a>
                 </div>
             </div>
         </form>
-    </div>
-    <div class="col-2">
-
     </div>
 </div>
 

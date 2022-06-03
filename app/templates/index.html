@@ -11,10 +11,10 @@
 
 {% block content %}
 {% for i in range(0,tests|length, 4) %}
-<div class="row mt-3">
+<div class="row">
     {% for j in range(i,i+4) %}
         {% if tests[j] %}
-            <div class="col-3">
+            <div class="col col-md-3 col-sm-6 mt-3">
                 <div class="card">
                     <img src="{{ url_for('static', filename='img/tests/'~tests[j].image)}}" class="card-img-top" alt="{{ tests[j].title }}">
                     <div class="card-body">

@@ -15,15 +15,15 @@
 <p>Статистика по тестам</p>
 <div class="progress">
   {% if percent == 0 %}
-    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent }}%</div>
+    <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent|round(2) }}%</div>
   {% else %}
-    <div class="progress-bar bg-success" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent }}%</div>
-    <div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - percent }}%" aria-valuenow="{{ 100 - percent }}" aria-valuemin="0" aria-valuemax="100">Неправильные {{ 100 - percent }}%</div>
+    <div class="progress-bar bg-success" role="progressbar" style="width: {{ percent }}%" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">Правильные {{ percent|round(2) }}%</div>
+    <div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - percent }}%" aria-valuenow="{{ 100 - percent }}" aria-valuemin="0" aria-valuemax="100">Неправильные {{ 100 - percent|round(2) }}%</div>
   {% endif %}
 </div>
 <div class="row mt-3">
   <div class="col">
-    <h4 class="text-center">Топ пройденных тестов</h4>
+    <h4 class="text-center">Топ-5 пройденных тестов</h4>
     <div class="row">
       {% for test in top_tests %}
         <div class="row">
@@ -31,7 +31,7 @@
             <p>{{ test[0] }}</p>
           </div>
           <div class="col-3">
-            <p class="text-end">{{ test[1] }} %</p>
+            <p class="text-end">{{ test[1]|round(2) }}%</p>
           </div>
         </div>
       {% endfor %}
@@ -43,20 +43,22 @@
     {% endif %}
   </div>
   <div class="col">
-    <h4 class="text-center">Топ пользователей по проценту правильных ответов</h4>
+    <h4 class="text-center">Топ-5 пользователей по проценту правильных ответов</h4>
     <div class="row">
       {% for p in top_people %}
-        <div class="row">
-          <div class="col">
-            <p>{{ p[0] }} {{ p[1] }}</p>
+        {% if p[2] != 0 %}
+          <div class="row">
+            <div class="col">
+              <p>{{ p[0] }} {{ p[1] }}</p>
+            </div>
+            <div class="col-4">
+              <p class="text-end">{{ p[2]|round(2) }} %</p>
+            </div>
+            <div class="col-3">
+              <p class="text-end">{{ p[3] }}</p>
+            </div>
           </div>
-          <div class="col-4">
-            <p class="text-end">{{ p[2] }} %</p>
-          </div>
-          <div class="col-3">
-            <p class="text-end">{{ p[3] }}</p>
-          </div>
-        </div>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
@@ -67,7 +69,7 @@
   </div>
   <div class="col">
     <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 0">
-      <a href="/tests/createTest" class="btn btn-primary btn-sm" role="button">+</a>
+      <a href="/tests/createTest" class="btn btn-primary " role="button">Создать тест</a>
     </div>
   </div>
 </div>
@@ -81,7 +83,7 @@
       {% endif %}
       <div class="row">
       {% for j in range(i*3, i*3+(created_tests|length%3 if (created_tests|length-i*3)//3==0 else 3)) %}
-        <div class="col-4">
+        <div class="col col-md-4 col-sm-6 mt-3">
           <div class="card">
             <div class="card-body d-block w-100">
               <h5 class="card-title">{{ created_tests[j].title }}</h5>
@@ -115,12 +117,12 @@
       {% endif %}
       <div class="row">
       {% for j in range(i*3, i*3+(completed_tests|length%3 if (completed_tests|length-i*3)//3==0 else 3)) %}
-        <div class="col-4">
+        <div class="col col-md-4 col-sm-6 mt-3">
           <div class="card">
             <div class="card-body d-block w-100">
               <h5 class="card-title">{{ completed_tests[j].title }}</h5>
               <p class="card-text">{{ completed_tests[j].description }}</p>
-              <a href="http://127.0.0.1:5000/tests/{{created_tests[j].id}}" class="btn btn-primary">Посмотреть</a>
+              <a href="http://127.0.0.1:5000/tests/{{completed_tests[j].id}}" class="btn btn-primary">Посмотреть</a>
             </div>
           </div>
         </div>

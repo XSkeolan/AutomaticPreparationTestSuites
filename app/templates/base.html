@@ -22,56 +22,43 @@
                         <img src="{{ url_for('static', filename='img/favicon.png') }}" class="d-inline-block align-text-top">
                         Генератор тестов
                     </a>
-<!--                    <a class="btn nav-item" href="/best" style="padding: 0; margin: 0px 10px -20px 10px">-->
-<!--                        <img src="{{ url_for('static', filename='img/best.png') }}" alt="Лучшие">-->
-<!--                        <p>Лучшие</p>-->
-<!--                    </a>-->
-<!--                    <a class="btn nav-item" href="#" style="padding: 0; margin: 0px 10px -20px 10px">-->
-<!--                        <img src="{{ url_for('static', filename='img/recent.png') }}" alt="Недавние">-->
-<!--                        <p>Недавние</p>-->
-<!--                    </a>-->
-                    <span class="navbar-text ms-auto">
+                    <div class="row nav-item" style="margin-right: 50px">
+                        <span class="navbar-text col">
                         {{ current_user.username }}
-                    </span>
-                    <div class="nav-item">
+                        </span>
+                        <div class="col">
                         {% if current_user.is_authenticated %}
-                        <div class="dropdown" style="margin-right: 30px">
+                        <div class="dropdown" style="">
                             <a class="btn btn-light dropdown-toggle shadow-none" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="{{ url_for('static', filename='img/profile.png') }}">
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <li><a class="dropdown-item" href="/editprofile">Профиль</a></li>
                                 <li><a class="dropdown-item" href="/dashboard">Статистика</a></li>
-                                <li><a class="dropdown-item" href="/unblockBank">Подать заявку на эксперта</a></li>
-                                <li><a class="dropdown-item" href="/bank">Банк заданий</a></li>
+                                {% if current_user.role_id == '7863f2b7-3f41-4a2f-ab52-5414bedbe3de' %}
+                                    <li><a class="dropdown-item" href="/unblockBank">Подать заявку на эксперта</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="/bank">Банк заданий</a></li>
+                                {% endif %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/logout">Выйти</a></li>
                             </ul>
                         </div>
                         {% else %}
-                        <a href="/login"><button class="btn btn-outline-primary" type="button">Вход</button></a>
+                            <a href="/login"><button class="btn btn-outline-primary" type="button">Вход</button></a>
                         {% endif %}
+                    </div>
                     </div>
                 </div>
             </nav>
             {% block content %} {% endblock %}
-
         </div>
         <footer class="text-center text-lg-start  text-muted mt-auto">
             <div class="container bg-light">
                 <div class="text-center p-4">
         © Скачков Даниил 2022
-        </div>
+                </div>
             </div>
-        <!-- Section: Social media -->
-        <!-- Section: Social media -->
-
-        <!-- Section: Links  -->
-        <!-- Section: Links  -->
-
-        <!-- Copyright -->
-
-        <!-- Copyright -->
         </footer>
         {% block scripts %}
             <!-- Optional JavaScript -->

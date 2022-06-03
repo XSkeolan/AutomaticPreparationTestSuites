@@ -10,34 +10,35 @@
 Создать тест
 {% endblock %}
 {% block content %}
-<div class="row mt-4">
-    <div class="col-2">
+<div class="row mt-4 justify-content-center">
+    <div class="col-6 col-md">
         <div id="imageCarousel" class="carousel slide" data-bs-touch="false" data-bs-interval="false">
             <div class="carousel-inner">
                 {% for image in images %}
                     {% set dir = 'img/tests/' ~ '' ~ image %}
                     {% if loop.first %}
                         <div class="carousel-item active">
-                            <img src="{{ url_for('static', filename=dir) }}" class="d-block w-100">
+                            <img src="{{ url_for('static', filename=dir) }}" class="img-thumbnail">
                         </div>
                     {% else %}
                         <div class="carousel-item">
-                            <img src="{{ url_for('static', filename=dir) }}" class="d-block w-100">
+                            <img src="{{ url_for('static', filename=dir) }}" class="img-thumbnail">
                         </div>
                     {% endif %}
                 {% endfor %}
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Предыдущий</span>
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Следующий</span>
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий</span>
             </button>
         </div>
     </div>
-    <div class="col">
+    <div class="w-100 d-block d-md-none"></div>
+    <div class="col col-md-9">
         <form class="form" method="POST">
             <h2 class="form-signin-heading">Создать тест</h2>
             {% for category, message in  get_flashed_messages(with_categories=true) %}
@@ -51,17 +52,15 @@
             {{ form.hidden_tag() }}
             {{ render_field(form.title) }}
             {{ render_field(form.description) }}
-            {{ render_field(form.questions) }}
+            {{ render_field(form.questions, ) }}
             {{ render_field(form.is_common) }}
             {{ render_field(form.image) }}
-            <div class="row">
-                <div class="col">
+            <div class="row justify-content-between">
+                <div class="col-auto mr-auto">
                     {{ render_field(form.submit) }}
                 </div>
-                <div class="col">
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 0">
-                        <a href="/dashboard" class="btn btn-primary btn" role="button">Вернуться</a>
-                    </div>
+                <div class="col-auto">
+                    <a href="/dashboard" class="btn btn-primary btn" role="button">Вернуться</a>
                 </div>
             </div>
         </form>

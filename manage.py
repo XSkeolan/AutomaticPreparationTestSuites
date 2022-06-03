@@ -60,6 +60,7 @@ def is_safe_url(target):
 def forbidden(e):
     return render_template('/errors/403.html')
 
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template('/errors/404.html')
@@ -73,11 +74,11 @@ def login_me():
         user = User.query.filter_by(username=form.username.data).first()
 
         if not user:
-            flash('Invalid username or password')
+            flash('Неверный никнейм или пароль')
             return render_template('login.html', form=form)
 
         if not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Неверный никнейм или пароль')
             return render_template('login.html', form=form)
 
         print(form.remember.data)
@@ -159,8 +160,8 @@ def dashboard():
     passed_tests = current_user.tests.all()
 
     return render_template('dashboard.html', current_user=current_user, created_tests=created_tests,
-                           completed_tests=passed_tests, percent=current_user_percent_right, top_tests=top_tests,
-                           top_people=people)
+                           current_role=Role.query.get(current_user.role_id), completed_tests=passed_tests,
+                           percent=current_user_percent_right, top_tests=top_tests[:5], top_people=people[:5])
 
 
 @app.route('/editprofile', methods=['GET', 'POST'])
@@ -231,6 +232,7 @@ def create_test():
     base_url = url_for('static', filename='img/tests/dns.png')
     base_url = base_url[:len(base_url) - 1 - base_url[::-1].index('/')]
     entries = Path('./app'+base_url+'/')
+    print(entries)
     files = []
     for entry in entries.iterdir():
         files.append(entry.name)
